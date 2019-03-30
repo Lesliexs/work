@@ -16,7 +16,9 @@ sns.lmplot('population','profit',df,height=6,fit_reg=False)
 # print(len(df))
 # 获得样本特征
 def get_X(df):
-    ones = pd.DataFrame({'ones':np.ones(len(df))})
+    ones = pd.DataFrame(np.ones(len(df)))
+    # ones = pd.DataFrame({'ones':np.ones(len(df))})
+    print(ones)
     data = pd.concat([ones,df],axis=1)
 
     return data.iloc[:,:-1].values
@@ -85,11 +87,32 @@ print(cost(final_thata,X,y))
 ax = sns.tsplot(cost_data,time=np.arange(epoch+1))
 ax.set_xlabel('epoch')
 ax.set_ylabel('cost')
-plt.show()
+# plt.show()
 
 b = final_thata[0]
 m = final_thata[1]
 plt.scatter(data.population,data.profit,label='Training data')
 plt.plot(data.population,data.population*m+b,label = 'Prediction')
 plt.legend(loc=2)
+# plt.show()
+
+
+
+# 用sklearn的线性回归函数实现
+# 只要将数据处理好，然后送到sklearn里面训练就好了
+from sklearn import linear_model
+model = linear_model.LinearRegression()
+model.fit(X,y)
+x = np.array(X[:, 1])
+print(x)
+f = model.predict(X).flatten()
+print(f)
+
+fig, ax = plt.subplots(figsize=(8,5))
+ax.plot(x, f, 'r', label='Prediction')
+ax.scatter(data.population, data.profit, label='Traning Data')
+ax.legend(loc=2)
+ax.set_xlabel('population')
+ax.set_ylabel('profit')
+ax.set_title('Predicted profit vs. population Size')
 plt.show()
